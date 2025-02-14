@@ -1,13 +1,9 @@
 package no.hvl.dat110.messaging;
 
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
-import no.hvl.dat110.TODO;
-
 
 public class MessageConnection {
 
@@ -34,33 +30,29 @@ public class MessageConnection {
 
 	public void send(Message message) {
 
-		byte[] data;
-		
-		// TODO - START
-		// encapsulate the data contained in the Message and write to the output stream
-		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-			
-		// TODO - END
+		byte[] data = MessageUtils.encapsulate(message);
 
+		// encapsulate the data contained in the Message and write to the output stream
+
+		try {
+			outStream.write(data);
+		} catch (IOException ex) {
+			System.out.println("Connection: " + ex.getMessage());
+		}
 	}
 
 	public Message receive() {
+		try {
+			byte[] data = new byte[MessageUtils.SEGMENTSIZE];
 
-		Message message = null;
-		byte[] data;
-		
-		// TODO - START
-		// read a segment from the input stream and decapsulate data into a Message
-		
-		if (true)
-			throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - END
-		
-		return message;
-		
+			// read a segment from the input stream and decapsulate data into a Message
+			inStream.readFully(data);
+
+			return MessageUtils.decapsulate(data);
+		} catch (IOException ex) {
+			System.out.println("Connection: " + ex.getMessage());
+		}
+        return null;
 	}
 
 	// close the connection by closing streams and the underlying socket	
